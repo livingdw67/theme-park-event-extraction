@@ -29,6 +29,13 @@ class ZeroShotTagger:
         return resolve_overlaps([(e["start"], e["end"], GLINER_LABELS[e["label"]]) for e in found])
 
 
+def _device():
+    """The GPU when there is one; the deployed app and CI run on CPU."""
+    import torch
+
+    return "cuda" if torch.cuda.is_available() else "cpu"
+
+
 def _unlabeled_capitalized(text, spans):
     """Character positions in capitalized words (not the sentence's first word) that no span covers."""
     positions = set()
@@ -92,9 +99,10 @@ class FineTunedTagger:
         random.seed(seed)
         np.random.seed(seed)
         torch.manual_seed(seed)
+        device = _device()
         tokenizer = AutoTokenizer.from_pretrained(base)
         model = AutoModelForTokenClassification.from_pretrained(
-            base, num_labels=len(BIO), id2label=dict(enumerate(BIO)), label2id={t: i for i, t in enumerate(BIO)})
+            base, num_labels=len(BIO), id2label=dict(enumerate(BIO)), label2id={t: i for i, t in enumerate(BIO)}).to(device)
         encoded = []
         for text, spans in examples:
             enc = tokenizer(text, truncation=True, max_length=128, return_offsets_mapping=True)
@@ -112,7 +120,7 @@ class FineTunedTagger:
                 batch = encoded[i:i + batch_size]
                 width = max(len(e["input_ids"]) for e in batch)
                 def pad(key, value):
-                    return torch.tensor([e[key] + [value] * (width - len(e[key])) for e in batch])
+                    return torch.tensor([e[key] + [value] * (width - len(e[key])) for e in batch], device=device)
                 loss = model(input_ids=pad("input_ids", tokenizer.pad_token_id), attention_mask=pad("attention_mask", 0),
                              labels=pad("labels", -100)).loss
                 loss.backward()
@@ -130,7 +138,7 @@ class FineTunedTagger:
         enc = self.tokenizer(sentence, truncation=True, max_length=128, return_offsets_mapping=True, return_tensors="pt")
         offsets = enc.pop("offset_mapping")[0].tolist()
         with torch.no_grad():
-            tag_ids = self.model(**enc).logits[0].argmax(-1).tolist()
+            tag_ids = self.model(**enc.to(self.model.device)).logits[0].argmax(-1).tolist()
         return _spans_from_tags(offsets, tag_ids)
 
     def save(self, path):
@@ -141,4 +149,5 @@ class FineTunedTagger:
     def load(cls, path):
         from transformers import AutoModelForTokenClassification, AutoTokenizer
 
-        return cls(AutoModelForTokenClassification.from_pretrained(path).eval(), AutoTokenizer.from_pretrained(path))
+        return cls(AutoModelForTokenClassification.from_pretrained(path).to(_device()).eval(),
+                   AutoTokenizer.from_pretrained(path))
