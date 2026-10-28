@@ -13,18 +13,25 @@ were built from:
    ("silver" labels) for 2,999 sentences from 29 other articles, in two variants: `plain`, and
    `ignore_caps`, which leaves capitalized words the rules didn't match out of the loss.
 
-## Results (provisional: seed 42 only; seeds 7 and 13 in progress)
+## Results
 
 Exact-match scores on 150 sentences (131 entities: 44 attractions, 26 parks, 10 events, 51 dates).
 "Unlisted" are the 45 hand-labeled parks, attractions and events the rules can't find because the
-name isn't on their lists.
+name isn't on their lists. Each DistilBERT variant was trained with three seeds (42, 7, 13) on the same
+GPU setup; its row shows the mean over seeds (± standard deviation for F1). The intervals are 95%
+bootstrap intervals over sentences; for DistilBERT they are the per-seed ranges.
 
 | Tagger | Precision | Recall | F1 (95% CI) | Recall on unlisted names |
 |---|---|---|---|---|
 | Rules | 0.90 | 0.65 | 0.76 (0.67–0.84) | 0 |
 | Zero-shot GLiNER | 0.48 | 0.73 | 0.58 (0.50–0.66) | 0.40 |
-| DistilBERT, plain | 0.89 | 0.66 | 0.75 (0.67–0.83) | 0.07 |
-| DistilBERT, ignore_caps | 0.34 | 0.75 | 0.47 (0.39–0.54) | 0.31 |
+| DistilBERT, plain (3 seeds) | 0.90 | 0.66 | 0.76 ± 0.01 (0.66–0.84) | 0.04 |
+| DistilBERT, ignore_caps (3 seeds) | 0.35 | 0.75 | 0.48 ± 0.02 (0.38–0.58) | 0.32 (0.24–0.38) |
+
+Seed-to-seed variation (sd 0.01–0.02) is small next to the width of the intervals, so the size of the
+test set, not training randomness, limits how precisely these scores are known. For every plain seed,
+the paired F1 difference from the rules has an interval that includes zero (−0.04 to +0.04): no
+detectable difference. Every ignore_caps seed is worse than the rules (−0.37 to −0.18).
 
 Trained on the rules' labels alone, DistilBERT learns to copy the rules. Taking unlisted capitalized
 words out of the loss lets it find a third of the unlisted names, but it then tags characters and
@@ -50,6 +57,10 @@ python -m venv .venv && .venv\Scripts\python -m pip install -r requirements-dev.
 .venv\Scripts\python scripts/evaluate.py
 .venv\Scripts\streamlit run app/streamlit_app.py
 ```
+
+`requirements.txt` pins the CPU build of torch (what the deployed app uses). To train on a GPU, install
+torch from the CUDA index first; `FineTunedTagger` trains and predicts on the GPU when one is present.
+The reported models were trained on an RTX 5060 (about a minute each; 30–40 minutes on a laptop CPU).
 
 ## Data
 
