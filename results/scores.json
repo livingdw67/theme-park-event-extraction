@@ -1,0 +1,193 @@
+{
+ "sentences": 150,
+ "review": {
+  "checked": 150,
+  "accepted": 0,
+  "draft": 0
+ },
+ "entities": {
+  "EVENT": 10,
+  "ATTRACTION": 44,
+  "PARK": 26,
+  "DATE": 51
+ },
+ "unlisted_entities": 45,
+ "taggers": {
+  "rules": {
+   "EVENT": {
+    "precision": 0.444,
+    "recall": 0.4,
+    "f1": 0.421,
+    "support": 10
+   },
+   "ATTRACTION": {
+    "precision": 1.0,
+    "recall": 0.205,
+    "f1": 0.34,
+    "support": 44
+   },
+   "PARK": {
+    "precision": 0.917,
+    "recall": 0.846,
+    "f1": 0.88,
+    "support": 26
+   },
+   "DATE": {
+    "precision": 0.962,
+    "recall": 0.98,
+    "f1": 0.971,
+    "support": 51
+   },
+   "overall": {
+    "precision": 0.904,
+    "recall": 0.649,
+    "f1": 0.756,
+    "support": 131
+   },
+   "overall_f1_ci": [
+    0.667,
+    0.835
+   ],
+   "f1_minus_rules_ci": [
+    0.0,
+    0.0
+   ],
+   "unlisted_recall": 0.0
+  },
+  "gliner": {
+   "EVENT": {
+    "precision": 0.217,
+    "recall": 0.5,
+    "f1": 0.303,
+    "support": 10
+   },
+   "ATTRACTION": {
+    "precision": 0.289,
+    "recall": 0.5,
+    "f1": 0.367,
+    "support": 44
+   },
+   "PARK": {
+    "precision": 0.442,
+    "recall": 0.885,
+    "f1": 0.59,
+    "support": 26
+   },
+   "DATE": {
+    "precision": 0.939,
+    "recall": 0.902,
+    "f1": 0.92,
+    "support": 51
+   },
+   "overall": {
+    "precision": 0.48,
+    "recall": 0.733,
+    "f1": 0.58,
+    "support": 131
+   },
+   "overall_f1_ci": [
+    0.501,
+    0.657
+   ],
+   "f1_minus_rules_ci": [
+    -0.257,
+    -0.096
+   ],
+   "unlisted_recall": 0.4
+  },
+  "distilbert-ignore_caps-seed42": {
+   "EVENT": {
+    "precision": 0.5,
+    "recall": 0.5,
+    "f1": 0.5,
+    "support": 10
+   },
+   "ATTRACTION": {
+    "precision": 0.123,
+    "recall": 0.432,
+    "f1": 0.192,
+    "support": 44
+   },
+   "PARK": {
+    "precision": 0.348,
+    "recall": 0.923,
+    "f1": 0.505,
+    "support": 26
+   },
+   "DATE": {
+    "precision": 0.877,
+    "recall": 0.98,
+    "f1": 0.926,
+    "support": 51
+   },
+   "overall": {
+    "precision": 0.338,
+    "recall": 0.748,
+    "f1": 0.466,
+    "support": 131
+   },
+   "overall_f1_ci": [
+    0.392,
+    0.538
+   ],
+   "f1_minus_rules_ci": [
+    -0.359,
+    -0.227
+   ],
+   "unlisted_recall": 0.311
+  },
+  "distilbert-plain-seed42": {
+   "EVENT": {
+    "precision": 1.0,
+    "recall": 0.4,
+    "f1": 0.571,
+    "support": 10
+   },
+   "ATTRACTION": {
+    "precision": 0.562,
+    "recall": 0.205,
+    "f1": 0.3,
+    "support": 44
+   },
+   "PARK": {
+    "precision": 0.92,
+    "recall": 0.885,
+    "f1": 0.902,
+    "support": 26
+   },
+   "DATE": {
+    "precision": 0.962,
+    "recall": 0.98,
+    "f1": 0.971,
+    "support": 51
+   },
+   "overall": {
+    "precision": 0.887,
+    "recall": 0.656,
+    "f1": 0.754,
+    "support": 131
+   },
+   "overall_f1_ci": [
+    0.674,
+    0.833
+   ],
+   "f1_minus_rules_ci": [
+    -0.043,
+    0.038
+   ],
+   "unlisted_recall": 0.067
+  }
+ },
+ "distilbert_plain_seeds": {
+  "n": 1,
+  "mean_f1": 0.754,
+  "sd_f1": null,
+  "mean_unlisted_recall": 0.067
+ },
+ "distilbert_ignore_caps_seeds": {
+  "n": 1,
+  "mean_f1": 0.466,
+  "sd_f1": null,
+  "mean_unlisted_recall": 0.311
+ }
+}
