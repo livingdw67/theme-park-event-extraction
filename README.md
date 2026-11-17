@@ -1,5 +1,7 @@
 # Theme Park Event Extraction
 
+[![tests](https://github.com/livingdw67/theme-park-event-extraction/actions/workflows/tests.yml/badge.svg)](https://github.com/livingdw67/theme-park-event-extraction/actions/workflows/tests.yml)
+
 Find **parks, attractions, events and dates** in text and turn them into rows for a park events
 calendar, e.g. *"Universal Studios Florida closed Kongfrontation on September 8, 2002"* →
 `Kongfrontation · close · 2002-09-08`, with the sentence kept as evidence.
@@ -51,12 +53,16 @@ titles as well, and precision collapses. GLiNER finds the most unlisted names, a
 | `results/` | `scores.json`, `predictions.jsonl` |
 
 ```
-python -m venv .venv && .venv\Scripts\python -m pip install -r requirements-dev.txt
-.venv\Scripts\python -m pytest -q tests
-.venv\Scripts\python scripts/train.py --variant plain --seed 42
-.venv\Scripts\python scripts/evaluate.py
-.venv\Scripts\streamlit run app/streamlit_app.py
+python -m venv .venv
+source .venv/bin/activate            # Windows: .venv\Scripts\activate
+python -m pip install -r requirements-dev.txt
+python -m pytest -q tests
+python scripts/train.py --variant plain --seed 42
+python scripts/evaluate.py
+streamlit run app/streamlit_app.py
 ```
+
+The tests also run on every push and pull request ([tests.yml](.github/workflows/tests.yml)).
 
 `requirements.txt` pins the CPU build of torch (what the deployed app uses). To train on a GPU, install
 torch from the CUDA index first; `FineTunedTagger` trains and predicts on the GPU when one is present.
